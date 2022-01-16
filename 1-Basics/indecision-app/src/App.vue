@@ -1,8 +1,5 @@
 <template>
-  <Header
-    title="Indecision App"
-    description="don't know what decision to make? write your question and put your life in the hands of a computer :)"
-  />
+  <Header title="Indecision App" description="" />
   <Indecision />
 </template>
 

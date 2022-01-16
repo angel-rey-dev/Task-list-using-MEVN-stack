@@ -43,7 +43,6 @@ export default {
     async getAnswer() {
       const response = await fetch("https://yesno.wtf/api");
       const data = await response.json();
-      console.log("data", data);
       this.answer = {
         response: data.answer,
         image: data.image,
