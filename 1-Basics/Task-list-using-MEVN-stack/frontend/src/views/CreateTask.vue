@@ -75,9 +75,11 @@ export default defineComponent({
 });
 </script>
 
-
-<style lang="scss">
+<style lang="scss" scoped>
 .create-task {
+  animation: fadeIn 1s 0.5s ease forwards 1;
+  opacity: 0;
+  transform: translateY(1rem);
   margin: 0 auto;
   text-align: center;
 

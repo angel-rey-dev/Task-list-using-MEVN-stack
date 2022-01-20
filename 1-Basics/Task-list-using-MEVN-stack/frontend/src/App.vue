@@ -45,4 +45,10 @@ export default defineComponent({
   padding: 0 1rem 2rem;
   width: 100%;
 }
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 </style>

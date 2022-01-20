@@ -54,12 +54,18 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .tasks-grid {
+  animation: fadeIn 1s 0.5s ease forwards 1;
+  opacity: 0;
+  transform: translateY(1rem);
   display: grid;
   grid-template-columns: repeat(auto-fill, 21rem);
   justify-content: center;
   grid-gap: 1.5rem;
 }
 .no-tasks {
+  animation: fadeIn 1s 0.5s ease forwards 1;
+  opacity: 0;
+  transform: translateY(1rem);
   margin: auto;
   font-size: 1rem;
   padding: 0 1rem;
