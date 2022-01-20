@@ -3,7 +3,7 @@ import Indecision from "@/components/Indecision.vue";
 
 describe("Indecision", () => {
   let wrapper;
-  let clgSpy;
+
   global.fetch = jest.fn(() =>
     Promise.resolve({
       json: () =>
@@ -17,35 +17,34 @@ describe("Indecision", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(Indecision);
-    clgSpy = jest.spyOn(console, "log");
     jest.clearAllMocks();
   });
 
-  test("Debe de hacer match con el snapShot", () => {
+  test("should match the snapShot", () => {
     expect(wrapper.html()).toMatchSnapshot();
   });
 
-  test("Escribir en el input no debe disparar nada (console.log)", async () => {
+  test("should not execute the getAnswer function if the '?' symbol has not been entered in the input", async () => {
     const getAnswerSpy = jest.spyOn(wrapper.vm, "getAnswer");
-
     let input = wrapper.find("input");
+
     await input.setValue("Question");
 
-    expect(clgSpy).toHaveBeenCalled();
     expect(getAnswerSpy).not.toHaveBeenCalled();
   });
 
-  test("escribir el simbolo '?' debe disparar el getAnswer", async () => {
+  test("the getAnswer function must be executed when entering the '?' symbol in the input", async () => {
     const getAnswerSpy = jest.spyOn(wrapper.vm, "getAnswer");
-
     let input = wrapper.find("input");
+
     await input.setValue("Question ?");
 
     expect(getAnswerSpy).toHaveBeenCalled();
   });
 
-  test("pruebas en getAnswer", async () => {
+  test("getAnswer should return an image and text in response", async () => {
     await wrapper.vm.getAnswer();
+
     const answer = wrapper.vm.answer.response;
     const image = wrapper.find("img");
 
@@ -53,11 +52,12 @@ describe("Indecision", () => {
     expect(image.exists()).toBeTruthy();
   });
 
-  test("pruebas en getAnswer - fallando en el API", async () => {
-    fetch.mockImplementationOnce(() => Promise.reject(new Error("Error")));
-    await wrapper.vm.getAnswer();
+  test("getAnswer must return null if the API call fails", async () => {
     const answer = wrapper.vm.answer;
- 
+
+    await wrapper.vm.getAnswer();
+    fetch.mockImplementationOnce(() => Promise.reject(new Error("Error")));
+
     expect(answer).toBe(null);
   });
 });

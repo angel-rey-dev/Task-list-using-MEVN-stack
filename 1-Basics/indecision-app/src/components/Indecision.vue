@@ -58,8 +58,6 @@ export default {
     question(value) {
       this.showAnswer = false;
 
-      console.log(value);
-
       if (value.includes("?")) {
         this.answer = null;
         this.showAnswer = true;

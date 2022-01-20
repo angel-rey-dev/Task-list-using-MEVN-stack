@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Indecision Debe de hacer match con el snapShot 1`] = `
+exports[`Indecision should match the snapShot 1`] = `
 <section class="input-container"><input class="input" placeholder="Type your question here!" required="" title="Type your question here" type="text"><strong class="input__advice">* remember to finish with "?"</strong></section>
 <!--v-if-->
 `;
