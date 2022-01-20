@@ -41,18 +41,25 @@ export default {
       this.question = "";
     },
     async getAnswer() {
-      const response = await fetch("https://yesno.wtf/api");
-      const data = await response.json();
-      this.answer = {
-        response: data.answer,
-        image: data.image,
-      };
+      try {
+        const response = await fetch("https://yesno.wtf/api");
+        const data = await response.json();
+        this.answer = {
+          response: data.answer,
+          image: data.image,
+        };
+      } catch (error) {
+        this.answer = null
+      }
       this.showAnswer = true;
     },
   },
   watch: {
     question(value) {
       this.showAnswer = false;
+
+      console.log(value);
+
       if (value.includes("?")) {
         this.answer = null;
         this.showAnswer = true;
