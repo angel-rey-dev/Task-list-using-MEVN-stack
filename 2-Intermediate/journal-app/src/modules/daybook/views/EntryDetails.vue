@@ -7,7 +7,7 @@
       </div>
       <div class="buttons">
         <button class="buttons__btn buttons__btn--edit">
-          <i class="fa fa-edit"></i> Edit
+          <i class="fa fa-upload"></i> Upload photo
         </button>
         <button class="buttons__btn buttons__btn--delete">
           <i class="fa fa-trash"></i> Delete
@@ -18,7 +18,8 @@
     <div class="entry-content">
       <textarea
         class="entry-content__text"
-        placeholder="Add a new entry"
+        placeholder="what's new?"
+        rows="10"
       ></textarea>
     </div>
 
@@ -28,7 +29,7 @@
       alt="entry image"
     />
   </section>
-  <FloatingActionButton />
+  <FloatingActionButton icon="fa-save" />
 </template>
 
 <script>
@@ -45,7 +46,6 @@ export default {
 
 <style lang="scss" scoped>
 .entry {
-  border: 1px solid red;
 
   &__image {
     box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
@@ -95,7 +95,11 @@ export default {
 }
 .entry-content {
   textarea {
-    border: 1px solid red;
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    padding: 1rem;
+    outline: none;
     width: 100%;
     height: 100%;
   }

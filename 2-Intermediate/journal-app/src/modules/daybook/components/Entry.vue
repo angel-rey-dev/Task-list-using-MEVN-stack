@@ -9,15 +9,12 @@
     </div>
 
     <header class="entry-header">
-      <h2 class="entry-header__title">Entry</h2>
+      <h2 class="entry-header__title"> {{entry.date}} </h2>
     </header>
 
     <div class="entry-content">
       <div class="entry-content__text">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur odit
-        ipsum, nihil labore, molestiae accusamus saepe possimus omnis quos quam
-        dolore? Ex voluptates veritatis quam quae quo tempora repellendus
-        facilis!
+        {{entry.description}}
       </div>
     </div>
   </section>
@@ -26,6 +23,12 @@
 <script>
 export default {
   name: "Entry",
+  props: {
+    entry: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 
