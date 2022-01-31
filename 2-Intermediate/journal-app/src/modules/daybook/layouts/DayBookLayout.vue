@@ -1,11 +1,14 @@
 <template>
-  <navbar />
+  <Navbar />
 
   <section>
-    <div>
-      <entry-list />
+    <div class="entry-list-container">
+      <EntryList />
     </div>
-    <router-view />
+
+    <div class="entry-container">
+      <router-view />
+    </div>
   </section>
 </template>
 
@@ -20,3 +23,18 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+section {
+  display: flex;
+}
+.entry-container {
+  background-color: #eee;
+  width: 70%;
+}
+.entry-list-container {
+  background-color: #ccc;
+  width: 30%;
+  border-right: 2px solid #ddd;
+}
+</style>
