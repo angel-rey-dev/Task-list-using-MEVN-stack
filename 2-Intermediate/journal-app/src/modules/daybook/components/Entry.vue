@@ -1,32 +1,72 @@
 <template>
   <section
     class="entry"
-    @click="$router.push({ name: 'entry-details', params: { entryId: 10 } })"
+    @click="$router.push({ name: 'entry-details', params: { entryId: entry.id } })"
   >
-    <div class="entry-date">
-      <span class="entry-date__date">25 december</span>
-      <span class="entry-date__day">Monday</span>
-    </div>
-
     <header class="entry-header">
-      <h2 class="entry-header__title"> {{entry.date}} </h2>
+      <h2 class="entry-date__date">{{ yearDay }} </h2>
+      <span class="entry-date__day">{{ month }} </span>
+      <span class="entry-date__day">{{ day }} </span>
     </header>
 
     <div class="entry-content">
       <div class="entry-content__text">
-        {{entry.description}}
+        {{ shortText }}
       </div>
     </div>
   </section>
 </template>
 
 <script>
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const daysInWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 export default {
   name: "Entry",
   props: {
     entry: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    shortText() {
+      return this.entry.description.length > 100
+        ? this.entry.description.substring(0, 100) + "..."
+        : this.entry.description;
+    },
+    day() {
+      const date = new Date(this.entry.date);
+      return date.getDate();
+    },
+    month() {
+      const date = new Date(this.entry.date);
+      return months[date.getMonth()];
+    },
+    yearDay() {
+      const date = new Date(this.entry.date);
+      return `${daysInWeek[date.getDay()]}, ${date.getFullYear()}`;
     },
   },
 };
