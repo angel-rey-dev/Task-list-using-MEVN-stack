@@ -8,11 +8,25 @@
           <span class="entry-date__day"> {{ day }} </span>
         </div>
         <div class="buttons">
-          <button class="buttons__btn buttons__btn--edit">
-            <i class="fa fa-upload"></i> Upload photo
-          </button>
-          <button class="buttons__btn buttons__btn--delete">
+          <input
+            type="file"
+            @change="onSelectedImage"
+            accept="image/*"
+            ref="imageSelector"
+            v-show="false"
+          />
+          <button
+            class="buttons__btn buttons__btn--delete"
+            v-if="entry.id"
+            @click="onDeleteEntry"
+          >
             <i class="fa fa-trash"></i> Delete
+          </button>
+          <button
+            class="buttons__btn buttons__btn--edit"
+            @click="onSelectImage"
+          >
+            <i class="fa fa-upload"></i> Upload photo
           </button>
         </div>
       </header>
@@ -28,18 +42,27 @@
 
       <img
         class="entry__image"
-        src="https://phantom-marca.unidadeditorial.es/ebefdeb5e639b628fe723ed204e95da0/crop/0x42/710x441/resize/1320/f/jpg/assets/multimedia/imagenes/2022/01/12/16419856008740.jpg"
+        v-if="entry.picture && !localImage"
+        :src="entry.picture"
+        alt="entry image"
+      />
+      <img
+        class="entry__image"
+        v-if="localImage"
+        :src="localImage"
         alt="entry image"
       />
     </section>
-    <FloatingActionButton icon="fa-save" />
+    <FloatingActionButton icon="fa-save" @on:click="saveEntry" />
   </template>
 </template>
 
 <script>
 import { defineAsyncComponent } from "vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import getDayMonthYear from "../helpers/getDayMonthYear";
+import uploadImage from "../helpers/uploadImage";
+import Swal from "sweetalert2";
 
 export default {
   name: "EntryDetails",
@@ -52,6 +75,8 @@ export default {
   data() {
     return {
       entry: null,
+      localImage: null,
+      file: null,
     };
   },
   components: {
@@ -77,11 +102,92 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      updateEntry: "journal/updateEntry",
+      createEntry: "journal/createEntry",
+      deleteEntry: "journal/deleteEntry",
+    }),
     loadEntry() {
-      const entry = this.getEntryById(this.entryId);
+      let entry;
 
-      if (entry) this.entry = entry;
-      else return this.$router.push({ name: "no-entry-selected" });
+      if (this.entryId === "new") {
+        entry = {
+          date: new Date().toString(),
+          description: "",
+        };
+      } else {
+        entry = this.getEntryById(this.entryId);
+        if (!entry) return this.$router.push({ name: "no-entry-selected" });
+      }
+
+      this.entry = entry;
+    },
+    async saveEntry() {
+      new Swal({
+        title: "Saving...",
+        allowOutsideClick: false,
+      });
+      Swal.showLoading();
+
+      const picture = await uploadImage(this.file);
+      this.entry.picture = picture;
+
+      if (this.entry.id) {
+        await this.updateEntry(this.entry);
+      } else {
+        const newEntryId = await this.createEntry(this.entry);
+
+        this.$router.push({
+          name: "entry-details",
+          params: { entryId: newEntryId },
+        });
+      }
+
+      Swal.fire("Saved!", "Your entry has been saved successfully!", "success");
+      this.file = null;
+      this.localImage = null;
+    },
+    async onDeleteEntry() {
+      const { isConfirmed } = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (isConfirmed) {
+        new Swal({
+          title: "Deleting...",
+          allowOutsideClick: false,
+        });
+        Swal.showLoading();
+
+        await this.deleteEntry(this.entry.id);
+        this.$router.push({ name: "no-entry-selected" });
+
+        Swal.fire(
+          "Deleted!",
+          "Your entry has been deleted successfully!",
+          "success"
+        );
+      }
+    },
+    onSelectedImage(event) {
+      const file = event.target.files[0];
+
+      if (!file) {
+        this.localImage = null;
+        this.file = null;
+        return;
+      }
+      this.file = file;
+      const reader = new FileReader();
+      reader.onload = () => (this.localImage = reader.result);
+      reader.readAsDataURL(file);
+    },
+    onSelectImage() {
+      this.$refs.imageSelector.click();
     },
   },
   created() {

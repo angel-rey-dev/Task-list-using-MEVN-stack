@@ -2,7 +2,11 @@
   <section>
     <h1>Select an entry</h1>
   </section>
-  <FloatingActionButton />
+  <FloatingActionButton
+    @on:click="
+      $router.push({ name: 'entry-details', params: { entryId: 'new' } })
+    "
+  />
 </template>
 
 <script>
@@ -26,7 +30,7 @@ section {
   height: 100%;
 }
 
-h1{
-    font-size: 2rem;
+h1 {
+  font-size: 2rem;
 }
 </style>

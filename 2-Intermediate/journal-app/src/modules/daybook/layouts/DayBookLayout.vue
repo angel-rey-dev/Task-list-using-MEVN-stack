@@ -1,7 +1,7 @@
 <template>
   <Navbar />
 
-  <section>
+  <section v-if="!isLoading">
     <div class="entry-list-container">
       <EntryList />
     </div>
@@ -10,16 +10,31 @@
       <router-view />
     </div>
   </section>
+  <div v-else>
+    <h2>Loading entries...</h2>
+  </div>
 </template>
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "DayBookLayout",
   components: {
     Navbar: defineAsyncComponent(() => import("../components/Navbar")),
     EntryList: defineAsyncComponent(() => import("../components/EntryList")),
+  },
+  computed: mapState({
+    isLoading: (state) => state.journal.isLoading,
+  }),
+  methods: {
+    ...mapActions({
+      getEntries: "journal/getEntries",
+    }),
+  },
+  created() {
+    this.getEntries();
   },
 };
 </script>
